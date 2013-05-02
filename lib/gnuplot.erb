@@ -1,0 +1,7 @@
+set terminal png
+set output "data/c-<%= concurrency %>-baseline-performance-graph.png"
+set title "ab -c <%= concurrency %> -n <%= concurrency * 500 %>"
+set grid y
+set xlabel "request"
+set ylabel "response time (ms)"
+plot <%= plot_list(hostings, concurrency) %>
