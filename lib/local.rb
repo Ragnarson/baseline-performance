@@ -4,7 +4,7 @@ class Local < Hosting
   def create
     run_in_app_dir("puma --port 3000 --preload --daemon --quiet --pidfile /tmp/puma.pid")
     sleep(1)
-    'http://localhost:3000/'
+    'http://0.0.0.0:3000/'
   end
 
   def cleanup
