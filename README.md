@@ -14,6 +14,7 @@ Currently the following setups are supported:
    - [ab tool](http://httpd.apache.org/docs/2.4/programs/ab.html)
    - [heroku toolbelt](https://toolbelt.heroku.com/)
    - [shelly gem](https://shellycloud.com/documentation/shelly_gem)
+   - [gnuplot](http://www.gnuplot.info)
 2. Run `bundle install`.
 3. Login to Heroku and to Shelly Cloud using their command line tools (`heroku auth:login` and `shelly login`).
 4. Check out options by running `ruby measure-performance.rb --help`.
