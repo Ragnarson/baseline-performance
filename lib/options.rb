@@ -71,5 +71,5 @@ def hostingbyname(name)
 end
 
 def default_options
-  {app: "app", hostings: KNOWN_HOSTINGS, concurrencies: [10, 30]}
+  {app: "app", hostings: KNOWN_HOSTINGS, concurrencies: [1, 16, 32]}
 end

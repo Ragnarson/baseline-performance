@@ -16,7 +16,7 @@ class PerformanceTest
   end
 
   def warm_up
-    run("ab -c 10 -n 200 #{address}")
+    run("ab -c 16 -n 200 #{address}")
   end
 
   def run_ab
