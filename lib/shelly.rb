@@ -6,15 +6,15 @@ class Shelly < Hosting
     run_in_app_dir("git add .")
     run_in_app_dir("git commit -m Init")
     @codename = random_codename
-    run_in_app_dir("shelly add -d=none -s=#{size} -c=#{@codename} #{'-o='+$shelly_organization if $shelly_organization}")
+    run_in_app_dir("shelly add --databases none --size #{size} --code-name #{@codename} #{'--organization '+$shelly_organization if $shelly_organization} --region eu")
     sleep 10
-    set_thins(thins_per_server)
+    set_pumas(pumas_per_server)
     "http://#{@codename}.shellyapp.com/"
   end
 
   def deploy
     run_in_app_dir("git push #{@codename} master")
-    run_in_app_dir("shelly start -c=#{@codename}")
+    run_in_app_dir("shelly start --cloud #{@codename}")
   end
 
   def pre_deploy
@@ -24,17 +24,17 @@ class Shelly < Hosting
   end
 
   def cleanup
-    run_in_app_dir("echo 'yes' | shelly stop -c=#{@codename}")
+    run_in_app_dir("echo 'yes' | shelly stop --cloud #{@codename}")
     run_in_app_dir("rm -rf .git/")
     run_in_app_dir("rm -f Cloudfile")
   end
 
   def name
-    "shelly-#{servers}-servers-#{thins_per_server*servers}-thins"
+    "shelly-#{servers}-servers-#{pumas_per_server*servers}-pumas"
   end
 
   def description
-    "shelly (#{servers} #{size} server#{'s' if servers > 1} with #{thins_per_server} thins each)"
+    "shelly (#{servers} #{size} server#{'s' if servers > 1} with #{pumas_per_server} pumas each)"
   end
 
   # Small server costs €0.0287/hour which we'll count as $0.0374/hour.
@@ -50,7 +50,7 @@ class Shelly < Hosting
 
   def add_servers
     (2..servers).each do |server|
-      change_cloudfile(/\z/, "    app#{server}:\n      size: #{size}\n      thin: #{thins_per_server}\n")
+      change_cloudfile(/\z/, "    app#{server}:\n      size: #{size}\n      puma: #{pumas_per_server}\n")
     end
     git_commit_file("Cloudfile")
   end
@@ -59,8 +59,8 @@ class Shelly < Hosting
     'benchmark-' + Array.new(8){('a'..'z').to_a.sample}.join
   end
 
-  def set_thins(number)
-    change_cloudfile(/thin: \d+/, "thin: #{number}")
+  def set_pumas(number)
+    change_cloudfile(/puma: \d+/, "puma: #{number}")
     git_commit_file("Cloudfile")
   end
 
@@ -75,42 +75,32 @@ class Shelly < Hosting
   end
 end
 
-class Shelly1Server10Thins < Shelly
+class Shelly1Server2Pumas < Shelly
   def servers
     1
   end
 
-  def thins_per_server
-    10
+  def pumas_per_server
+    2
   end
 end
 
-class Shelly2Servers10Thins < Shelly
+class Shelly2Servers1Pumas < Shelly
   def servers
     2
   end
 
-  def thins_per_server
-    5
+  def pumas_per_server
+    1
   end
 end
 
-class Shelly2Servers20Thins < Shelly
+class Shelly2Servers2Pumas < Shelly
   def servers
     2
   end
 
-  def thins_per_server
-    10
-  end
-end
-
-class Shelly3Servers30Thins < Shelly
-  def servers
-    3
-  end
-
-  def thins_per_server
-    10
+  def pumas_per_server
+    2
   end
 end

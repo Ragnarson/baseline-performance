@@ -28,65 +28,38 @@ class Heroku < Hosting
   end
 end
 
-class HerokuThins < Heroku
-  def description
-    "heroku (#{dynos} thin dyno#{'s' if dynos > 1})"
-  end
-end
-
-class Heroku1Thin < HerokuThins
-  def dynos
-    1
-  end
-
-  def name
-    'heroku-thins-1-dyno'
-  end
-end
-
-class Heroku10Thins < HerokuThins
-  def dynos
-    10
-  end
-
-  def name
-    'heroku-thins-10-dynos'
-  end
-end
-
-class HerokuUnicorns < Heroku
+class HerokuPumas < Heroku
   def pre_deploy
-    create_unicorn_config
+    create_puma_config
     create_procfile
   end
 
   def after_cleanup
-    File.unlink(unicorn_config_dst, procfile_dst)
+    File.unlink(puma_config_dst, procfile_dst)
   end
 
   def description
-    "heroku (#{dynos} unicorn dyno#{'s' if dynos > 1} with 5 workers each)"
+    "heroku (#{dynos} puma dyno#{'s' if dynos > 1} with 2 workers each)"
   end
 
   private
 
-  def create_unicorn_config
-    FileUtils.cp(unicorn_config_src, unicorn_config_dst)
-    git_commit_file("unicorn.conf")
+  def create_puma_config
+    FileUtils.cp(puma_config_src, puma_config_dst)
+    git_commit_file("puma.rb")
   end
 
   def create_procfile
-    File.write(procfile_dst,
-      "web: bundle exec unicorn -p $PORT -c ./unicorn.conf\n")
+    File.write(procfile_dst, "web: bundle exec puma -C puma.rb\n")
     git_commit_file("Procfile")
   end
 
-  def unicorn_config_src
-    File.join(File.dirname(__FILE__), 'unicorn.conf')
+  def puma_config_src
+    File.join(File.dirname(__FILE__), 'puma.rb')
   end
 
-  def unicorn_config_dst
-    File.join(@app_dir, 'unicorn.conf')
+  def puma_config_dst
+    File.join(@app_dir, 'puma.rb')
   end
 
   def procfile_dst
@@ -94,12 +67,22 @@ class HerokuUnicorns < Heroku
   end
 end
 
-class Heroku2Unicorns < HerokuUnicorns
+class Heroku1Puma < HerokuPumas
+  def dynos
+    1
+  end
+
+  def name
+    'heroku-pumas-1-dynos'
+  end
+end
+
+class Heroku2Pumas < HerokuPumas
   def dynos
     2
   end
 
   def name
-    'heroku-unicorns-2-dynos'
+    'heroku-pumas-2-dynos'
   end
 end

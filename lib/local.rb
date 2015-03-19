@@ -2,13 +2,13 @@ require_relative 'hosting'
 
 class Local < Hosting
   def create
-    run_in_app_dir("thin start -p 3000 -d -l /dev/null -P /tmp/thin.pid")
+    run_in_app_dir("puma --port 3000 --preload --daemon --quiet --pidfile /tmp/puma.pid")
     sleep(1)
     'http://localhost:3000/'
   end
 
   def cleanup
-    run_in_app_dir("thin stop -P /tmp/thin.pid")
+    run_in_app_dir("pumactl --pidfile /tmp/puma.pid stop")
   end
 
   def name
@@ -16,7 +16,7 @@ class Local < Hosting
   end
 
   def description
-    'local (1 thin)'
+    'local (1 puma)'
   end
 
   def monthly_cost

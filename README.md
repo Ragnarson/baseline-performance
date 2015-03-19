@@ -4,10 +4,9 @@ This script measures and compares baseline performance of Ruby hosting solutions
 
 Currently the following setups are supported:
 
-- localhost with one thin (to make sure everything is in order)
-- Heroku with thin web servers
-- Heroku with unicorn web servers
-- Shelly Cloud with thin web servers
+- localhost with one puma (to make sure everything is in order)
+- Heroku with puma web servers
+- Shelly Cloud with puma web servers
 
 ## Quick Start
 
@@ -33,5 +32,5 @@ Code is written in a way so as to make it easy to test different types of applic
 
 - Experiment with different configurations. For example you could rerun the test with different concurrency settings. That only requires using a proper comman line option.
 - Modify the application under test. For example it could take a random time to respond, use file system or connect to a database. All you have to do is to modify source code under `app/`.
-- Implement a different cloud setup. For example you could change number of Heroku dynos or size and number of Shelly servers, as well as number of unicorn workers per dyno or number of thins per Shelly server. It's only a matter of creating a new subclass in `lib/`, adding it to a `KNOWN_HOSTINGS` list in `lib/options.rb` and reruning the script.
+- Implement a different cloud setup. For example you could change number of Heroku dynos or size and number of Shelly servers, as well as number of workers per dyno or number of pumas per Shelly server. It's only a matter of creating a new subclass in `lib/`, adding it to a `KNOWN_HOSTINGS` list in `lib/options.rb` and reruning the script.
 - Write benchmark code for another hosting solution. To do that subclass `Hosting` and implement all the relevant methods, using existing subclasses as a guide.
