@@ -23,7 +23,11 @@ class PerformanceTest
     base = data_base_name(concurrency)
     requests = 500 * concurrency
     run("mkdir -p data")
-    run("ab -c #{concurrency} -n #{requests} -g #{base}.plot -e #{base}.csv #{address} > #{base}.output")
+    run("ab -c #{concurrency}" \
+      " -n #{requests}" \
+      " -g #{base}.plot" \
+      " -e #{base}.csv" \
+      " #{address} > #{base}.output")
   end
 
   def result

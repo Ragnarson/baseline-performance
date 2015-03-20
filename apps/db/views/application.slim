@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title Sinatra sample application
+
+    link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"
+    link href="/stylesheets/custom.css" rel="stylesheet"
+    link href="/stylesheets/sticky-footer.css" rel="stylesheet"
+
+  body
+    div.container
+      h1 This is a sample application
+
+      == yield
+
+    == partial "footer"

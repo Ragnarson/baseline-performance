@@ -2,9 +2,19 @@ require_relative 'hosting'
 
 class Local < Hosting
   def create
-    run_in_app_dir("puma --port 3000 --preload --daemon --quiet --pidfile /tmp/puma.pid")
+    run_in_app_dir("puma --port 3000" \
+      " --threads 0:16" \
+      " --preload" \
+      " --daemon" \
+      " --quiet" \
+      " --pidfile /tmp/puma.pid" \
+      " --environment production")
     sleep(1)
     'http://0.0.0.0:3000/'
+  end
+
+  def prepare_database
+    run_in_app_dir("rake db:seed")
   end
 
   def cleanup

@@ -14,9 +14,12 @@ class Hosting
     end
     puts ">>> Creating..."
     @address = create
+    puts ">> Preparing for deploy..."
     pre_deploy if respond_to?(:pre_deploy)
     puts ">>> Deploying to #{@address}..."
     deploy if respond_to?(:deploy)
+    puts ">>> Preparing database..."
+    prepare_database if respond_to?(:prepare_database)
     puts ">>> Benchmarking..."
     benchmark
     puts ">>> Cleaning up..."

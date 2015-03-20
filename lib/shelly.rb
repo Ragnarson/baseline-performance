@@ -6,14 +6,18 @@ class Shelly < Hosting
     run_in_app_dir("git add .")
     run_in_app_dir("git commit -m Init")
     @codename = random_codename
-    run_in_app_dir("shelly add --databases none --size #{size} --code-name #{@codename} #{'--organization '+$shelly_organization if $shelly_organization} --region eu")
-    sleep 10
+    run_in_app_dir("shelly add --databases postgresql" \
+      " --size #{size}" \
+      " --code-name #{@codename}" \
+      " --region eu" \
+      " #{'--organization '+$shelly_organization if $shelly_organization}")
     set_pumas(pumas_per_server)
-    "http://#{@codename}.shellyapp.com/"
+
+    "https://#{@codename}.shellyapp.com/"
   end
 
   def deploy
-    run_in_app_dir("git push #{@codename} master")
+    run_in_app_dir("git push shelly master")
     run_in_app_dir("shelly start --cloud #{@codename}")
   end
 
@@ -21,6 +25,10 @@ class Shelly < Hosting
     if servers > 1
       add_servers
     end
+  end
+
+  def prepare_database
+    run_in_app_dir("shelly rake db:seed")
   end
 
   def cleanup
@@ -60,7 +68,7 @@ class Shelly < Hosting
   end
 
   def set_pumas(number)
-    change_cloudfile(/puma: \d+/, "puma: #{number}")
+    change_cloudfile(/thin: \d+/, "puma: #{number}")
     git_commit_file("Cloudfile")
   end
 
@@ -75,13 +83,13 @@ class Shelly < Hosting
   end
 end
 
-class Shelly1Server2Pumas < Shelly
+class Shelly1Server1Puma < Shelly
   def servers
     1
   end
 
   def pumas_per_server
-    2
+    1
   end
 end
 
@@ -92,15 +100,5 @@ class Shelly2Servers1Pumas < Shelly
 
   def pumas_per_server
     1
-  end
-end
-
-class Shelly2Servers2Pumas < Shelly
-  def servers
-    2
-  end
-
-  def pumas_per_server
-    2
   end
 end

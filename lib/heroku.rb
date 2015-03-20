@@ -7,13 +7,20 @@ class Heroku < Hosting
     run_in_app_dir("git add .")
     run_in_app_dir("git commit -m Init")
     output = run_in_app_dir("heroku apps:create --region eu")
-    first_match(output, %r{(http://[^/]+/)})
+    first_match(output, %r{(https://[^/]+/)})
   end
 
   def deploy
     run_in_app_dir("git push heroku master")
     run_in_app_dir("heroku ps:scale web=#{dynos}")
     sleep 60
+  end
+
+  def prepare_database
+    run_in_app_dir("heroku pg:wait")
+
+    run_in_app_dir("heroku run rake db:migrate")
+    run_in_app_dir("heroku run rake db:seed")
   end
 
   def cleanup
@@ -39,7 +46,7 @@ class HerokuPumas < Heroku
   end
 
   def description
-    "heroku (#{dynos} puma dyno#{'s' if dynos > 1} with 2 workers each)"
+    "heroku (#{dynos} puma dyno#{'s' if dynos > 1} with 1 worker each)"
   end
 
   private

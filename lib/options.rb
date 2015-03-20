@@ -17,7 +17,7 @@ def options
       parser.separator "Specific options:"
 
       parser.on("-a", "--app DIRECTORY",
-        "Test given application instead of the default in app/") do |app|
+        "Test given application instead of the default in apps/app") do |app|
         options[:app] = app
       end
 
@@ -55,8 +55,8 @@ def options
   end
 end
 
-KNOWN_HOSTINGS = [Local, Heroku1Puma, Heroku2Pumas, Shelly1Server2Pumas,
-  Shelly2Servers1Pumas, Shelly2Servers2Pumas]
+KNOWN_HOSTINGS = [Local, Heroku1Puma, Heroku2Pumas, Shelly1Server1Puma,
+  Shelly2Servers1Pumas]
 
 def print_known_hostings
   puts "Known hostings (use with --hostings option):"
@@ -71,5 +71,5 @@ def hostingbyname(name)
 end
 
 def default_options
-  {app: "app", hostings: KNOWN_HOSTINGS, concurrencies: [1, 16, 32]}
+  {app: "apps/app", hostings: KNOWN_HOSTINGS, concurrencies: [1, 16, 32]}
 end

@@ -1,4 +1,5 @@
 namespace :db do
   task :migrate
   task :setup
+  task :seed
 end
