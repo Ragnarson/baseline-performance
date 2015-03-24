@@ -93,7 +93,17 @@ class Shelly1Server1Puma < Shelly
   end
 end
 
-class Shelly2Servers1Pumas < Shelly
+class Shelly1Server2Pumas < Shelly
+  def servers
+    1
+  end
+
+  def pumas_per_server
+    2
+  end
+end
+
+class Shelly2Servers1Puma < Shelly
   def servers
     2
   end

@@ -56,7 +56,7 @@ def options
 end
 
 KNOWN_HOSTINGS = [Local, Heroku1Puma, Heroku2Pumas, Shelly1Server1Puma,
-  Shelly2Servers1Pumas]
+  Shelly2Servers1Puma, Shelly1Server2Pumas]
 
 def print_known_hostings
   puts "Known hostings (use with --hostings option):"
